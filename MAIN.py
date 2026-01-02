@@ -281,7 +281,8 @@ class LivePage(QWidget):
         self.timer.timeout.connect(self.read_plc)
 
         self.logo = QLabel()
-        self.logo.setPixmap(QPixmap("logo.png").scaledToHeight(36))
+        self.logo.setPixmap(QPixmap(resource_path("logo.png")).scaledToHeight(36))
+
 
         self.run = QLabel("● RUN OFF")
         self.run.setStyleSheet("color:gray;font-weight:bold")
@@ -300,7 +301,7 @@ class LivePage(QWidget):
         stop.clicked.connect(self.timer.stop)
 
         header = QHBoxLayout()
-        header.addWidget(self.logo.png)
+        header.addWidget(self.logo.)
         header.addWidget(start)
         header.addWidget(stop)
         header.addWidget(self.run)
@@ -462,4 +463,5 @@ app.setStyleSheet(DARK_THEME)
 win = MainWindow()
 win.show()
 sys.exit(app.exec_())
+
 
