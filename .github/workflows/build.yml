@@ -27,7 +27,7 @@ jobs:
 
     - name: Build EXE with PyInstaller
       run: |
-        pyinstaller --onefile --windowed --name leaf_profile_viewer leaf_plotter.py
+        pyinstaller --onefile --windowed --name leaf_profile_Analyzer MAIN.py
 
     - name: Upload EXE as artifact
       uses: actions/upload-artifact@v4
