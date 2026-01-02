@@ -300,7 +300,7 @@ class LivePage(QWidget):
         stop.clicked.connect(self.timer.stop)
 
         header = QHBoxLayout()
-        header.addWidget(self.logo)
+        header.addWidget(self.logo.png)
         header.addWidget(start)
         header.addWidget(stop)
         header.addWidget(self.run)
@@ -462,3 +462,4 @@ app.setStyleSheet(DARK_THEME)
 win = MainWindow()
 win.show()
 sys.exit(app.exec_())
+
