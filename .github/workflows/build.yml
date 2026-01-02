@@ -1,0 +1,52 @@
+name: Build EXE
+
+on:
+  push:
+    branches:
+      - main        # Trigger on push to main
+    tags:
+      - 'v*'        # Trigger on tag like v1.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller matplotlib
+
+    - name: Build EXE with PyInstaller
+      run: |
+        pyinstaller --onefile --windowed --name leaf_profile_viewer leaf_plotter.py
+
+    - name: Upload EXE as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: leaf-profile-viewer
+        path: dist/leaf_profile_viewer.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: leaf-profile-viewer
+
+    - name: Upload to GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: leaf_profile_viewer.exe
