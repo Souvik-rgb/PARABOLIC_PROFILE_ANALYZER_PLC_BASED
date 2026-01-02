@@ -3,37 +3,41 @@ name: Build EXE
 on:
   push:
     branches:
-      - main        # Trigger on push to main
+      - main
     tags:
-      - 'v*'        # Trigger on tag like v1.0
+      - 'v*'
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller matplotlib
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyinstaller
 
-    - name: Build EXE with PyInstaller
-      run: |
-        pyinstaller --onefile --windowed --name leaf_profile_Analyzer MAIN.py
+      - name: Build EXE with PyInstaller
+        run: |
+          pyinstaller --onefile --windowed ^
+            --name LeafProfileAnalyzer ^
+            --add-data "logo.png;." ^
+            MAIN.py
 
-    - name: Upload EXE as artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: leaf-profile-viewer
-        path: dist/leaf_profile_viewer.exe
+      - name: Upload EXE as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeafProfileAnalyzer-Windows
+          path: dist/LeafProfileAnalyzer.exe
 
   release:
     needs: build
@@ -41,12 +45,12 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
 
     steps:
-    - name: Download build artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: leaf-profile-viewer
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: LeafProfileAnalyzer-Windows
 
-    - name: Upload to GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: leaf_profile_viewer.exe
+      - name: Upload to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: LeafProfileAnalyzer.exe
